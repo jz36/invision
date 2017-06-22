@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#00e15f</color>
+    <color name="colorPrimaryDark">#00c553</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="textTopColor">#FFFFFF</color>
+    <color name="boxShadowColor1">#4D000000</color>
+    <color name="boxShadowColor2">#14000000</color>
+    <color name="textTitleColor">#000000</color>
+    <color name="textSubtitleColor">#36000000</color>
+    <color name="textDone">#359357</color>
+    <color name="backgroundMain">#f5f5f5</color>
+</resources>
