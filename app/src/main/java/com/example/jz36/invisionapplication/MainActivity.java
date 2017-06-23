@@ -1,11 +1,14 @@
 package com.example.jz36.invisionapplication;
 
+import android.app.Activity;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -17,8 +20,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.ParseException;
 
 public class MainActivity extends AppCompatActivity {
+
+    private Activity activity = this;
+    LinearLayout topPanel;
+    LinearLayout scrollPanel;
 
     public static String LOG_TAG = "my_log";
     @Override
@@ -26,7 +34,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         this.getSupportActionBar().hide();
-//        new ParseTask().execute();
+
+        topPanel = (LinearLayout) findViewById(R.id.topPanel);
+
+        scrollPanel = (LinearLayout) findViewById(R.id.scrollPanel);
+
+        new ParseTask().execute();
 
 
     }
@@ -40,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(Void... params) {
-            // получаем данные с внешнего ресурса
             try {
                 URL url = new URL("http://urdm.ru/media/img/ob-director.json");
 
@@ -56,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
                 String line;
                 while ((line = reader.readLine()) != null) {
                     buffer.append(line);
+                    buffer.append("\n");
                 }
 
                 resultJson = buffer.toString();
@@ -69,15 +82,18 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String strJson) {
             super.onPostExecute(strJson);
-            Log.d(LOG_TAG, strJson);
             JSONObject obDirector = null;
 
             try {
                 obDirector = new JSONObject(strJson);
-                JSONObject organization = obDirector.getJSONObject("organization");
-                TextView organizationName = (TextView) findViewById(R.id.organizationName);
-                organizationName.setText((String) organization.get("name"));
+                JSONtoActivity workWithActivity = new JSONtoActivity(activity, topPanel, scrollPanel, obDirector);
+                workWithActivity.setOrganizationName();
+                workWithActivity.setOrganizationStatus();
+                workWithActivity.setEvents();
+
             } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (ParseException e) {
                 e.printStackTrace();
             }
 
